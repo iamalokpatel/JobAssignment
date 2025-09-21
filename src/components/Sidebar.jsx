@@ -1,7 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Sidebar = () => {
-  const [price, setPrice] = useState(250);
+const Sidebar = ({
+  selectedBrand,
+  setSelectedBrand,
+  selectedColor,
+  setSelectedColor,
+  selectedPrice,
+  setSelectedPrice,
+}) => {
+  const brands = ["Nike", "Adidas", "Skechers", "Vans", "Airmax"];
+  const colors = [
+    { name: "Blue", hex: "#006CFF" },
+    { name: "Red", hex: "#FC3E39" },
+    { name: "Black", hex: "#171717" },
+    { name: "Yellow", hex: "#FFF600" },
+    { name: "Pink", hex: "#FF00B4" },
+    { name: "Grey", hex: "#EFDFDF" },
+  ];
 
   return (
     <aside className="hidden mt-[65px] lg:flex flex-col w-[355px] bg-white p-4 gap-6">
@@ -12,7 +27,10 @@ const Sidebar = () => {
           {["Nike", "Airmax", "Adidas", "Vans", "All Stars"].map((item) => (
             <li
               key={item}
-              className="hover:text-blue-500 cursor-pointer font-proxima font-normal text-[18px]"
+              className={`cursor-pointer font-proxima font-normal text-[18px] hover:text-blue-500 ${
+                selectedBrand === item ? "text-blue-500 font-semibold" : ""
+              }`}
+              onClick={() => setSelectedBrand(item)}
             >
               {item}
             </li>
@@ -27,32 +45,31 @@ const Sidebar = () => {
           type="range"
           min="0"
           max="500"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          value={selectedPrice}
+          onChange={(e) => setSelectedPrice(Number(e.target.value))}
           className="w-full"
         />
         <div className="flex justify-between text-sm mt-2 text-gray-600">
           <span>$0</span>
-          <span>${price}</span>
+          <span>${selectedPrice}</span>
         </div>
       </div>
 
-      {/* Colors */}
+      {/* Color Filter */}
       <div className="bg-[#F6F7F8] border border-gray-200 rounded p-4">
         <h3 className="text-lg font-semibold mb-3">Color</h3>
         <div className="flex gap-3 flex-wrap">
-          {[
-            "#006CFF",
-            "#FC3E39",
-            "#171717",
-            "#FFF600",
-            "#FF00B4",
-            "#EFDFDF",
-          ].map((hex) => (
+          {colors.map((color) => (
             <div
-              key={hex}
-              className="w-6 h-6 rounded-full border cursor-pointer"
-              style={{ backgroundColor: hex }}
+              key={color.hex}
+              className={`w-6 h-6 rounded-full border cursor-pointer ${
+                selectedColor === color.hex ? "border-4 border-blue-500" : ""
+              }`}
+              style={{ backgroundColor: color.hex }}
+              onClick={() =>
+                setSelectedColor(selectedColor === color.hex ? "" : color.hex)
+              }
+              title={color.name}
             />
           ))}
         </div>
@@ -62,10 +79,15 @@ const Sidebar = () => {
       <div className="bg-[#F6F7F8] border border-gray-200 rounded p-4">
         <h3 className="text-lg font-semibold mb-3">Brand</h3>
         <ul className="space-y-2 text-gray-700">
-          {["Nike", "Adidas", "Skechers", "Vans"].map((brand) => (
+          {brands.map((brand) => (
             <li
               key={brand}
-              className="hover:text-blue-500 cursor-pointer font-normal"
+              className={`cursor-pointer hover:text-blue-500 font-normal ${
+                selectedBrand === brand ? "text-blue-500 font-semibold" : ""
+              }`}
+              onClick={() =>
+                setSelectedBrand(selectedBrand === brand ? "" : brand)
+              }
             >
               {brand}
             </li>

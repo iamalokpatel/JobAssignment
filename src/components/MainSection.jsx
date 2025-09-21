@@ -6,21 +6,41 @@ import products from "../data/products";
 import ProductCard from "./ProductCard";
 import Pagination from "./Pagination";
 
-const MainSection = () => {
+const MainSection = ({ selectedBrand, selectedColor }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 6;
+  const [sortBy, setSortBy] = useState("Name");
+  const [show, setShow] = useState(6); // number of products per page
 
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  // 1️⃣ Filter by brand and color (updated)
+  let filteredProducts = products.filter((p) => {
+    const brandMatch = selectedBrand ? p.brand === selectedBrand : true;
 
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(
+    const colorMatch = selectedColor
+      ? p.colors?.some((c) => c.toLowerCase() === selectedColor.toLowerCase())
+      : true;
+
+    return brandMatch && colorMatch;
+  });
+
+  // 2️⃣ Sort products
+  if (sortBy === "Name") {
+    filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy === "Price") {
+    filteredProducts.sort((a, b) => a.discountPrice - b.discountPrice);
+  } else if (sortBy === "Rating") {
+    filteredProducts.sort((a, b) => b.ratingValue - a.ratingValue);
+  } else if (sortBy === "Newest") {
+    filteredProducts.sort((a, b) => b.id - a.id); // higher id = newer
+  }
+
+  // 3️⃣ Pagination
+  const totalPages = Math.ceil(filteredProducts.length / show);
+  const indexOfLastProduct = currentPage * show;
+  const indexOfFirstProduct = indexOfLastProduct - show;
+  const currentProducts = filteredProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
-
-  const [sortBy, setSortBy] = useState("Name");
-  const [show, setShow] = useState("12");
 
   return (
     <main className="flex-1 p-4 mt-[65px] flex flex-col gap-6">
@@ -51,21 +71,22 @@ const MainSection = () => {
 
       {/* Toolbar Section */}
       <div className="flex justify-between items-center bg-[#F6F7F8] rounded shadow">
-        {/* Left side: Items, Sort, Show */}
         <div className="flex items-center gap-18">
-          {/* Items count */}
           <p className="font-proxima font-normal text-[16px] leading-[16px] tracking-[0%] text-[#22262A]">
-            13 Items found
+            {filteredProducts.length} Items found
           </p>
 
-          {/* Sort By */}
+          {/* Sort */}
           <div className="flex items-center gap-2">
             <label className="font-proxima font-normal text-[16px] leading-[16px] tracking-[0%] text-[#22262A]">
               Sort By:
             </label>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={(e) => {
+                setSortBy(e.target.value);
+                setCurrentPage(1);
+              }}
               className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none"
             >
               <option value="Name">Name</option>
@@ -82,17 +103,22 @@ const MainSection = () => {
             </label>
             <select
               value={show}
-              onChange={(e) => setShow(e.target.value)}
+              onChange={(e) => {
+                setShow(Number(e.target.value));
+                setCurrentPage(1);
+              }}
               className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none"
             >
+              <option value={6}>6</option>
               <option value={12}>12</option>
+              <option value={18}>18</option>
               <option value={24}>24</option>
               <option value={36}>36</option>
             </select>
           </div>
         </div>
 
-        {/* Right side: View Switch */}
+        {/* View Switch */}
         <div className="flex items-center">
           <button className="p-[1.10px] hover:bg-[#40BFFF] hover:text-white transition">
             <img
@@ -101,7 +127,7 @@ const MainSection = () => {
               className="w-[61.47px] h-[62.57px]"
             />
           </button>
-          <button className="  hover:bg-[#40BFFF] hover:text-white transition">
+          <button className="hover:bg-[#40BFFF] hover:text-white transition">
             <img
               src={switch_2}
               alt="List View"
@@ -112,13 +138,13 @@ const MainSection = () => {
       </div>
 
       {/* Products Grid */}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {currentProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
 
+      {/* Pagination */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

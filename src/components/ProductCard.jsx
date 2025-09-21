@@ -1,7 +1,7 @@
 // src/components/ProductCard.jsx
 import React from "react";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, selectedColor }) => {
   return (
     <div className="border p-3 rounded shadow hover:shadow-lg transition relative">
       {product.isHot && (
@@ -37,8 +37,11 @@ const ProductCard = ({ product }) => {
         {product.colors.map((color, index) => (
           <span
             key={index}
-            className={`w-4 h-4 rounded-full border`}
+            className={`w-4 h-4 rounded-full border ${
+              selectedColor === color ? "border-2 border-blue-500" : ""
+            }`}
             style={{ backgroundColor: color }}
+            title={color}
           ></span>
         ))}
       </div>
