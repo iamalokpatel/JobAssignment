@@ -10,12 +10,12 @@ const Sidebar = ({
 }) => {
   const brands = ["Nike", "Adidas", "Skechers", "Vans", "Airmax"];
   const colors = [
-    { name: "Blue", hex: "#006CFF" },
-    { name: "Red", hex: "#FC3E39" },
-    { name: "Black", hex: "#171717" },
-    { name: "Yellow", hex: "#FFF600" },
-    { name: "Pink", hex: "#FF00B4" },
-    { name: "Grey", hex: "#EFDFDF" },
+    { name: "blue", hex: "blue" },
+    { name: "red", hex: "red" },
+    { name: "black", hex: "black" },
+    { name: "yellow", hex: "yellow" },
+    { name: "pink", hex: "pink" },
+    { name: "grey", hex: "grey" },
   ];
 
   return (
@@ -44,10 +44,9 @@ const Sidebar = ({
         <input
           type="range"
           min="0"
-          max="500"
+          max={10000} // ya max price in your products array
           value={selectedPrice}
           onChange={(e) => setSelectedPrice(Number(e.target.value))}
-          className="w-full"
         />
         <div className="flex justify-between text-sm mt-2 text-gray-600">
           <span>$0</span>
