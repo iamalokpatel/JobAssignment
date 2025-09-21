@@ -6,20 +6,20 @@ import products from "../data/products";
 import ProductCard from "./ProductCard";
 import Pagination from "./Pagination";
 
-const MainSection = ({ selectedBrand, selectedColor }) => {
+const MainSection = ({ selectedBrand, selectedColor, selectedPrice }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("Name");
   const [show, setShow] = useState(6); // number of products per page
 
   // 1️⃣ Filter by brand and color (updated)
-  let filteredProducts = products.filter((p) => {
+  const filteredProducts = products.filter((p) => {
     const brandMatch = selectedBrand ? p.brand === selectedBrand : true;
-
     const colorMatch = selectedColor
       ? p.colors?.some((c) => c.toLowerCase() === selectedColor.toLowerCase())
       : true;
+    const priceMatch = selectedPrice ? p.discountPrice <= selectedPrice : true;
 
-    return brandMatch && colorMatch;
+    return brandMatch && colorMatch && priceMatch;
   });
 
   // 2️⃣ Sort products

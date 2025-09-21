@@ -7,6 +7,7 @@ const Sidebar = ({
   setSelectedColor,
   selectedPrice,
   setSelectedPrice,
+  maxProductPrice,
 }) => {
   const brands = ["Nike", "Adidas", "Skechers", "Vans", "Airmax"];
   const colors = [
@@ -44,9 +45,10 @@ const Sidebar = ({
         <input
           type="range"
           min="0"
-          max={10000} // ya max price in your products array
+          max={maxProductPrice} // products ka max discountPrice
           value={selectedPrice}
           onChange={(e) => setSelectedPrice(Number(e.target.value))}
+          className="w-full "
         />
         <div className="flex justify-between text-sm mt-2 text-gray-600">
           <span>$0</span>
@@ -57,7 +59,7 @@ const Sidebar = ({
       {/* Color Filter */}
       <div className="bg-[#F6F7F8] border border-gray-200 rounded p-4">
         <h3 className="text-lg font-semibold mb-3">Color</h3>
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex flex-wrap justify-around">
           {colors.map((color) => (
             <div
               key={color.hex}
